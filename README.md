@@ -1,57 +1,55 @@
-📊 Problem Difficulty Prediction using NLP & Machine Learning
+# 📊 Problem Difficulty Prediction using NLP & Machine Learning
 
-This project aims to predict the difficulty of programming problems based solely on their textual descriptions.
-Given a problem statement, input format, and output format, the system predicts:
+This project predicts the difficulty of programming problems using only their textual descriptions.
 
-Difficulty class: easy, medium, or hard
+Given a problem statement, input format, and output format, the system outputs:
 
-Difficulty score: a continuous numerical estimate
+- **Difficulty class:** `Easy`, `Medium`, or `Hard`
+- **Difficulty score:** a continuous numerical value
 
-The project follows a classical, interpretable NLP + ML pipeline, emphasizing clarity, reproducibility, and explainability.
+The project follows a **classical, interpretable NLP + Machine Learning pipeline**, focusing on clarity, reproducibility, and explainability rather than unnecessary complexity.
 
-🔍 Problem Motivation
+---
 
-Online judges and competitive programming platforms often label problems with difficulty levels.
-However, these labels are:
+## 🎯 Problem Statement
 
-subjective,
+Online coding platforms assign difficulty labels to problems, but these labels are often:
 
-coarse-grained,
+- subjective,
+- coarse-grained,
+- inconsistent across platforms.
 
-and sometimes inconsistent.
+This project investigates whether **problem difficulty can be learned automatically from text**, using:
 
-This project explores whether problem difficulty can be learned automatically from text, using:
+- problem descriptions,
+- input/output specifications,
+- lightweight, domain-informed features.
 
-problem descriptions,
+## 🔄 High-Level Workflow
 
-input/output specifications,
-
-and lightweight domain-informed features.
-
-🧠 High-Level Workflow
-Raw Data (JSONL)
-        ↓
-Data Loading
-        ↓
-Preprocessing & Feature Engineering
-        ↓
-TF-IDF + Numeric Feature Construction
-        ↓
-Model Training
-  ├─ Classification (difficulty class)
-  └─ Regression (difficulty score)
-        ↓
-Evaluation & Explainability
-        ↓
+Raw Data (JSONL)  
+↓  
+Data Loading  
+↓  
+Preprocessing & Feature Engineering  
+↓  
+TF-IDF + Numeric Feature Construction  
+↓  
+Model Training  
+↓  
+Evaluation & Explainability  
+↓  
 Inference & Web Application
 
-📁 Project Structure
+## 📁 Project Structure
+
+```
 ACM/
-├── app.py                  # Streamlit web application
+├── app.py
 ├── data/
-│   ├── raw/                # Raw JSONL dataset
-│   └── processed/          # Processed CSV dataset
-├── models/                 # Saved models and transformers
+│   ├── raw/
+│   └── processed/
+├── models/
 ├── src/
 │   ├── config.py
 │   ├── load_data.py
@@ -65,217 +63,268 @@ ACM/
 │   ├── predict.py
 │   └── main.py
 └── README.md
+```
 
-⚙️ Detailed Workflow & Code Explanation
-1️⃣ config.py — Central Configuration
+## ⚙️ Detailed Workflow & Code Explanation
+
+### 1️⃣ `config.py` — Central Configuration
 
 Defines:
 
-directory structure,
+- base directory paths,
+- dataset locations,
+- target column names,
+- train–test split ratio,
+- random seed for reproducibility.
 
-dataset paths,
+This ensures **consistent configuration across all scripts**.
 
-target column names,
+---
 
-train–test split,
+### 2️⃣ `load_data.py` — Data Loading
 
-random seed for reproducibility.
+- Loads the raw dataset from **JSONL format**
+- Converts it into a pandas **DataFrame**
+- Includes a sanity check to verify:
+  - dataset shape,
+  - available columns
 
-This ensures consistency across all scripts and avoids hard-coded values.
+---
 
-2️⃣ load_data.py — Data Ingestion
+### 3️⃣ `preprocess.py` — Preprocessing & Feature Engineering
 
-Loads the raw dataset stored in JSON Lines (.jsonl) format and converts it into a pandas DataFrame.
+**Responsibilities:**
 
-A small sanity-check block allows quick verification of:
+- Selects required text and target columns
+- Removes missing or empty text rows
+- Engineers numeric features:
+  - description length
+  - input description length
+  - output description length
+  - keyword frequency
+- Combines all text fields into a single `full_text` column
 
-dataset shape,
+**Output:** Final dataset shape: (3899, 10)
 
-available columns.
+---
 
-3️⃣ preprocess.py — Data Cleaning & Feature Engineering
-
-Responsible for transforming raw text into structured features.
-
-Steps performed:
-
-Selects required text and target columns
-
-Removes missing or empty text rows
-
-Engineers numeric features:
-
-text length features
-
-keyword frequency (domain-informed)
-
-Combines all text into a single full_text field
-
-Output:
-
-Processed dataset saved as CSV
-
-Result:
-
-Final dataset shape: (3899, 10)
-
-4️⃣ features.py — Feature Construction
+### 4️⃣ `features.py` — Feature Construction
 
 Builds the final feature matrix used for modeling.
 
-Features used:
+**Features used:**
 
-TF-IDF (1–2 grams) from full_text
+- **TF-IDF (1–2 grams)** from `full_text`
+- **Numeric features:**
+  - description length
+  - input length
+  - output length
+  - keyword count
 
-Numeric features:
+Both feature types are **scaled and combined**.
 
-description length
+**Train–test split:**
 
-input length
+- **80% training data** → 3119 samples
+- **20% test data** → 780 samples
 
-output length
+**Total features:** `310,762`
 
-keyword count
+---
 
-Both feature types are scaled and combined.
+### 5️⃣ Model Training
 
-Train–test split:
+#### 🔹 Classification Models
 
-80% train (3119 samples)
+- **Logistic Regression** (final classifier)
+- **Linear SVM** (comparison baseline)
 
-20% test (780 samples)
+#### 🔹 Regression Models
 
-Total features: 310,762
+- **Ridge Regression** (baseline)
+- **Linear SVR** (final regressor)
 
-Saved artifacts:
+Each training script:
 
-TF-IDF vectorizer
+- trains the model,
+- evaluates on the test set,
+- saves the trained model to `models/`.
 
-Numeric feature scaler
+---
 
-5️⃣ Model Training Scripts
-🔹 Classification
+## 📊 Model Performance
 
-train_classifier_logreg.py
-Logistic Regression (final classifier)
+### 🎯 Classification Results (Difficulty Class)
 
-train_classifier_svm.py
-Linear SVM (comparison baseline)
+| Model               | Accuracy | F1-macro |
+|---------------------|----------|----------|
+| Logistic Regression | **0.5013** | **0.4894** |
+| Linear SVM          | 0.4859   | 0.4455   |
 
-🔹 Regression
+✅ **Logistic Regression** selected as the final classifier.
 
-train_regressor_ridge.py
-Ridge Regression (baseline)
+---
 
-train_regressor_svr.py
-Linear SVR (final regressor)
+### 📈 Regression Results (Difficulty Score)
 
-Each script:
+| Model            | MAE     | RMSE   |
+|------------------|---------|--------|
+| Ridge Regression | 1.7237  | 2.0457 |
+| Linear SVR       | **1.7198** | **2.0449** |
 
-trains the model,
+✅ **Linear SVR** selected as the final regressor.
 
-evaluates on the test set,
+---
 
-saves the trained model to models/.
-
-6️⃣ Model Performance Summary
-🧠 Classification (Difficulty Class)
-Model	Accuracy	F1-macro
-Logistic Regression	0.5013	0.4894
-Linear SVM	0.4859	0.4455
-
-✔ Logistic Regression selected as final classifier.
-
-📈 Regression (Difficulty Score)
-Model	MAE	RMSE
-Ridge Regression	1.7237	2.0457
-Linear SVR	1.7198	2.0449
-
-✔ Linear SVR selected as final regressor.
-
-7️⃣ evaluate.py — Evaluation & Explainability
+### 🔍 `evaluate.py` — Evaluation & Explainability
 
 Performs:
 
-classification evaluation (accuracy, F1, confusion matrix),
+- classification evaluation (accuracy, F1-score, confusion matrix),
+- regression evaluation (MAE, RMSE),
+- regression → class calibration check,
+- model explainability by identifying top TF-IDF words per class.
 
-regression evaluation (MAE, RMSE),
+This improves transparency and interpretability of predictions.
 
-regression → class calibration check,
+---
 
-explainability analysis by extracting top TF-IDF words per class.
+### 🔮 `predict.py` — Inference Module
 
-This adds transparency to model behavior.
+Provides a user-facing prediction function:
 
-8️⃣ predict.py — Inference Module
-
-Provides a single user-facing prediction function:
-
+```python
 predict_difficulty(description, input_desc, output_desc)
+```
 
+**Returns:**
 
-Returns:
+- difficulty class,
+- difficulty score.
 
-difficulty class,
+**Ensures:**
 
-difficulty score.
+- feature consistency,
+- correct use of saved models and transformers.
 
-Ensures:
+---
 
-feature consistency,
-
-correct use of saved models and transformers.
-
-9️⃣ main.py — Pipeline Orchestration
+### 9️⃣ `main.py` — Pipeline Orchestration
 
 Runs the entire pipeline end-to-end:
 
-Preprocessing
-
-Feature extraction
-
-Classifier training
-
-Regressor training
-
-Final evaluation
+1. Preprocessing  
+2. Feature extraction  
+3. Classifier training  
+4. Regressor training  
+5. Final evaluation  
 
 Stops execution immediately if any step fails.
 
-🔟 app.py — Streamlit Web Application
+---
+
+### 🔟 `app.py` — Streamlit Web Application
 
 Provides a simple web interface where users can:
 
-enter a problem description,
+- enter a problem description,
+- get predicted difficulty and score instantly.
 
-get predicted difficulty and score instantly.
+Built on top of the trained ML pipeline using **Streamlit**.
 
-Built on top of the trained ML pipeline using Streamlit.
+---
 
-🚀 How to Run
-Run full pipeline
+## 🚀 How to Run
+
+### Run full pipeline
+
+```bash
 python src/main.py
 
-Run Streamlit app
 streamlit run app.py
+```
 
-🧾 Key Design Choices
+---
 
-Classical ML over DL for:
+## 🧾 Key Design Choices
 
-interpretability,
+- **Classical ML chosen over deep learning** for:
+  - interpretability,
+  - limited dataset size,
+  - faster experimentation.
 
-limited dataset size,
+- **Multi-task learning:**
+  - classification + regression.
 
-faster experimentation.
+- **Explainability prioritized** alongside performance.
 
-Multi-task learning:
+---
 
-classification + regression.
+## 📌 Conclusion
 
-Explainability prioritized over complexity.
+This project demonstrates that **problem difficulty can be reasonably estimated from textual descriptions alone** using a well-structured classical ML pipeline.
 
-📌 Conclusion
+The system is **modular, reproducible, interpretable**, and easily extensible for future deep learning approaches.
 
-This project demonstrates that problem difficulty can be reasonably estimated from textual descriptions alone using a well-designed classical ML pipeline.
-The system is modular, interpretable, reproducible, and easily extensible for future deep learning approaches.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

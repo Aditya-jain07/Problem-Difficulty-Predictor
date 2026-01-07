@@ -27,13 +27,28 @@ This project investigates whether **problem difficulty can be learned automatica
 
 ---
 
-### 📌 Project Summary
+### 📌 Project Summary (Technical Description)
 
-This project focuses on **automatically predicting the difficulty of programming problems** using only their **textual descriptions**. Given a problem statement along with its input and output specifications, the system predicts both a **difficulty class** (`Easy`, `Medium`, `Hard`) and a **continuous difficulty score**.
+This project predicts the difficulty of programming problems using only their textual information. The dataset consists of problem descriptions along with their input and output specifications. During preprocessing, only the relevant textual columns (`description`, `input_description`, `output_description`) and target variables (`problem_class`, `problem_score`) were retained. Rows with missing or empty text were removed to ensure data quality.
 
-A **classical NLP + Machine Learning pipeline** is employed, involving text preprocessing, domain-informed feature engineering, **TF-IDF**–based text representation, and multi-task learning through **classification and regression models**. **Logistic Regression** is used for difficulty classification, while **Linear Support Vector Regression** is used for difficulty score prediction.
+All text fields were combined into a single unified representation (`full_text`) to capture the complete semantic context of each problem. Along with text, **domain-informed numeric features** were engineered, including:
 
-The project emphasizes **interpretability, reproducibility, and explainability**, incorporating feature analysis and consistency checks between classification and regression outputs. An end-to-end pipeline and a Streamlit web application are also provided to demonstrate real-time inference on unseen problems.
+- length of the problem description,  
+- length of input description,  
+- length of output description,  
+- frequency of algorithm-related keywords (e.g., graph, dp, recursion, bfs, dfs).
+
+Text was represented using **TF-IDF with unigrams and bigrams**, producing a high-dimensional sparse feature space. These features were combined with scaled numeric features to form the final input matrix. The dataset was split into **80% training and 20% testing**, with stratification applied on the difficulty class.
+
+Two learning tasks were modeled:
+- **Classification** to predict the difficulty class (Easy, Medium, Hard)  
+- **Regression** to predict a continuous difficulty score  
+
+For classification, **Logistic Regression** was selected based on **macro F1-score** rather than accuracy due to class imbalance and significant overlap involving the *Medium* class. While the *Hard* class was learned reliably, ambiguity in the *Medium* class limited overall accuracy.
+
+For regression, **Linear Support Vector Regression (SVR)** achieved slightly lower MAE and RMSE compared to Ridge Regression. Regression outputs were also mapped back to difficulty classes as a consistency check.
+
+Overall, the project highlights the challenges of predicting problem difficulty from text, particularly due to subjective labels, class imbalance, and semantic overlap. The pipeline emphasizes **interpretability, reproducibility, and explainability**, and includes an end-to-end workflow with a Streamlit web application for real-time inference on unseen problems.
 
 ---
 

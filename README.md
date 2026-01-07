@@ -27,7 +27,7 @@ This project investigates whether **problem difficulty can be learned automatica
 
 ---
 
-### 📌 Project Summary (Technical Description)
+### 📌 Project Summary (Technical Description) (**IMPORTANT**)
 
 This project predicts the difficulty of programming problems using only their textual information. The dataset consists of problem descriptions along with their input and output specifications. During preprocessing, only the relevant textual columns (`description`, `input_description`, `output_description`) and target variables (`problem_class`, `problem_score`) were retained. Rows with missing or empty text were removed to ensure data quality.
 

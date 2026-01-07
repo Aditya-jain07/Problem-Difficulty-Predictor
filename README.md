@@ -25,6 +25,18 @@ This project investigates whether **problem difficulty can be learned automatica
 - input/output specifications,
 - lightweight, domain-informed features.
 
+---
+
+### 📌 Project Summary
+
+This project focuses on **automatically predicting the difficulty of programming problems** using only their **textual descriptions**. Given a problem statement along with its input and output specifications, the system predicts both a **difficulty class** (`Easy`, `Medium`, `Hard`) and a **continuous difficulty score**.
+
+A **classical NLP + Machine Learning pipeline** is employed, involving text preprocessing, domain-informed feature engineering, **TF-IDF**–based text representation, and multi-task learning through **classification and regression models**. **Logistic Regression** is used for difficulty classification, while **Linear Support Vector Regression** is used for difficulty score prediction.
+
+The project emphasizes **interpretability, reproducibility, and explainability**, incorporating feature analysis and consistency checks between classification and regression outputs. An end-to-end pipeline and a Streamlit web application are also provided to demonstrate real-time inference on unseen problems.
+
+---
+
 ## 🔄 High-Level Workflow
 
 Raw Data (JSONL)  

@@ -313,6 +313,12 @@ This project demonstrates that **problem difficulty can be reasonably estimated 
 
 The system is **modular, reproducible, interpretable**, and easily extensible for future deep learning approaches.
 
+---
+
+### link to report and video 
+
+1. report -> https://docs.google.com/document/d/1F1t89ebRo9VksvIX6joR2EtlODbFgNlk/edit?usp=sharing&ouid=108800960855133179540&rtpof=true&sd=true
+2. demo video -> https://drive.google.com/file/d/1ZDN0kpOkKAyNR6UGY2ghbHxK4JAJzmdF/view?usp=sharing
 
 
 

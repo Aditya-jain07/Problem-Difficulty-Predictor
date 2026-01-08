@@ -265,6 +265,9 @@ Built on top of the trained ML pipeline using **Streamlit**.
 
 ### Run full pipeline
 
+run the src/main.py file for the code implementation
+run app.py for streamlit demonstration
+
 ```bash
 python src/main.py
 

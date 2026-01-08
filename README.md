@@ -94,6 +94,11 @@ ACM/
 
 ## ⚙️ Detailed Workflow & Code Explanation
 
+steps to run the code :-
+config.py -> load_data.py -> preprocess.py -> festures.py -> train_classifier_logreg.py -> train_regressor_svr.py -> evaluate.py -> predict.py
+
+or just run **'src/main.py'** 
+
 ### 1️⃣ `config.py` — Central Configuration
 
 Defines:

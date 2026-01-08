@@ -133,6 +133,18 @@ This ensures **consistent configuration across all scripts**.
 
 **Output:** Final dataset shape: (3899, 10)
 
+Columns:
+ - description
+ - input_description
+ - output_description
+ - problem_class
+ - problem_score
+ - len_description
+ - len_input_description
+ - len_output_description
+ - full_text
+ - keyword_count
+
 ---
 
 ### 4️⃣ `features.py` — Feature Construction
